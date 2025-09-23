@@ -1,19 +1,27 @@
-console.log ("Este programa es una dispensadora de billetes");                      // AUTOR: JORGEADX
+console.log ("Este programa es una dispensadora de billetes y monedas");            // AUTOR: JORGEADX
 
-function dispensarBilletes(cantidadARetirar) {                                      // Función principal para la dispensadora de billetes      
-    const denominaciones = [1000, 500, 200, 100, 50, 20];                           // Declara todos los valores de los billetes $
-    let inventario = {                                                              // Se declara cada denominación junto con la cantidad de billetes disponibles
+    const denominaciones = [1000, 500, 200, 100, 50, 20, 10, 5];                    // Declara todos los valores de los billetes y monedas $
+    let inventario = {                                                              // Se declara cada denominación junto con la cantidad de billetes y monedas disponibles
         1000: 10,
         500: 10,
         200: 10,
         100: 10,
         50: 10,
-        20: 10
-    };
+        20: 10,
+        10: 10,
+        5: 10,       
+    };                                                                              // Ahora el inventario se encuentra en alcance global para que se actualice automáticamente por cada retiro
+
+
+function dispensarBilletes(cantidadARetirar) {                                      // Función principal para la dispensadora de billetes      
 
     let entrega = {};                                                               // Se declara objeto con el que se hará la entrega
     let cambioRestante = cantidadARetirar;                                          // Se inicializa la variable
 
+    if (cantidadARetirar < 100){                                                    // Se utiliza condicional para que los retiros funcionen a partir de $100
+        console.log ("El monto mínimo para realizar retiros es de $100");
+        return;                                                                     // Finaliza el proceso dentro de la función
+    }
     for (let i = 0; i < denominaciones.length; i++) {                               // Bucle para iterar sobre todas las denominaciones de billetes
         let valor = denominaciones[i];                                              // Var. Que obtiene el valor del billete actual, desde elemento 0 hasta n
         let billetesDisponibles = inventario[valor];                                // Var. Que consulta cantidad de billetes de denominación específica
@@ -27,13 +35,21 @@ function dispensarBilletes(cantidadARetirar) {                                  
     }
 
     if (cambioRestante === 0) {                                                     // Evalúa si se pudo completar el dinero a entregar o no 
-        console.log("Billetes entregados:");
+        console.log("\nBilletes entregados:");                                      // Imprime mensaje en pantalla y da salto de línea
         for (let valor in entrega) {                                                // Recorre el objeto anteriormente vacío para imprimir los billetes que se dispensarán           
-            console.log(`$${valor}: ${entrega[valor]} billetes`);
+
+            
+            let cantidadEntregada = entrega[valor];
+            let tipoBOM = valor >= 20 ? "billete" : "moneda";                       // Var. Para definir si se entregarán billetes o monedas
+            let tipoUnoOMas = cantidadEntregada > 1 ? tipoBOM + "s" : tipoBOM;      // Var. Para definir si se trata de uno o más elementos al imprimir en pantalla
+            console.log(`$${valor}: ${cantidadEntregada} ${tipoUnoOMas}`);          // Muestra la cantidad de efectivo dispensado, junto con el monto de cada elemento y si son billetes o monedas
+            inventario[valor] -= cantidadEntregada;                                 // Proceso que actualiza el inventario
         }
     } else {
-        console.log("No hay combinación suficiente para dispensar ese monto.");     // Cuando no es posible dispensar billetes, imprime mensaje en pantalla
+        console.log("\nNo hay combinación suficiente para dispensar ese monto.");   // Cuando no es posible dispensar billetes, imprime mensaje en pantalla y da salto de línea
     }
 }
 
-dispensarBilletes(18200);                                                           // (EDITAR) Realiza la función de dispensadora para la cantidad entre paréntesis
+dispensarBilletes(18050);                                                           // (EDITAR) Realiza la función de dispensadora para la cantidad entre paréntesis
+dispensarBilletes(275);                                                             // (EDITAR) Ahora se pueden realizar más retiros si aún hay efectivo disponible
+dispensarBilletes(1000); 
